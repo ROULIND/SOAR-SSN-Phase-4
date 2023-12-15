@@ -11,11 +11,11 @@ import java.util.Date;
  * @author dimitriroulin
  */
 public class Comments {
-   private Integer commentId;
+    private Integer commentId;
     private String text;
     private Date datePublished;
-    //private Posts postId;
-    //private Users users; 
+    private Integer postId;
+    private Integer userId; 
     
     public Comments() {
     }
@@ -28,8 +28,6 @@ public class Comments {
         this.commentId = commentId;
         this.text = text;
     }
-    
-    
 
     public Integer getCommentId() {
         return commentId;
@@ -55,21 +53,17 @@ public class Comments {
         this.datePublished = datePublished;
     }
 
-    /*
-    public Posts getPostId() {
+    
+    public Integer getPostId() {
         return postId;
     }
 
-    public void setPostId(Posts postId) {
+    public void setPostId(Integer postId) {
         this.postId = postId;
     }
 
-    public Users getUsers() {
-        return users;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
-
-    public void setUsers(Users users) {
-        this.users = users;
-    }*/
 
 }

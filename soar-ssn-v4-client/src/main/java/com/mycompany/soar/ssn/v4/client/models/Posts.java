@@ -15,9 +15,9 @@ public class Posts {
     private Integer postId;
     private String text;
     private Date datePublished;
-    //private Collection<Users> usersCollection;
-    private Collection<Comments> commentsCollection;
-    //private Users users;
+    private Collection<Users> usersCollection; // list of user that liked the post
+    private Collection<Comments> commentsCollection; // list of comment related to a post
+    private Users users; // The user that created the post
     
     public Posts() {
     }
@@ -30,7 +30,7 @@ public class Posts {
         this.commentsCollection = commentsCollection;
     }
   
-    /*
+    
     public Posts(Integer postId, String text, Date datePublished, Collection<Users> usersCollection, Collection<Comments> commentsCollection, Users users) {
         this.postId = postId;
         this.text = text;
@@ -39,7 +39,7 @@ public class Posts {
         this.commentsCollection = commentsCollection;
         this.users = users;
      
-    }*/
+    }
     
 
     public Integer getPostId() {
@@ -66,14 +66,14 @@ public class Posts {
         this.datePublished = datePublished;
     }
 
-    /*
+    
     public Collection<Users> getUsersCollection() {
         return usersCollection;
     }
 
     public void setUsersCollection(Collection<Users> usersCollection) {
         this.usersCollection = usersCollection;
-    }*/
+    }
 
     public Collection<Comments> getCommentsCollection() {
         return commentsCollection;
@@ -83,13 +83,11 @@ public class Posts {
         this.commentsCollection = commentsCollection;
     }
     
-
-    /*
     public Users getUsers() {
         return users;
     }
 
     public void setUsers(Users users) {
         this.users = users;
-    }*/
+    }
 }

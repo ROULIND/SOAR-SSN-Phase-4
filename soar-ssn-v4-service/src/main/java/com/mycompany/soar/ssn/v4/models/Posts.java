@@ -57,17 +57,14 @@ public class Posts implements Serializable {
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
     @ManyToMany
-    @JsonbTransient
     private Collection<Users> usersCollection;
-    @OneToMany(mappedBy = "postId")
-    @JsonbTransient
+    @OneToMany(mappedBy = "post")
     private Collection<Comments> commentsCollection;
     @JoinColumns({
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
     @ManyToOne
-    @JsonbTransient
     private Users users;
 
     public Posts() {
