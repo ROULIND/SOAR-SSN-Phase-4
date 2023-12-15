@@ -19,6 +19,7 @@ import java.util.List;
 @SessionScoped
 public class PostBean implements Serializable {
     private Posts selectedPost;
+    private String currentPostText;
     // List for storing publications
     private String errorMessage;
     
@@ -26,8 +27,12 @@ public class PostBean implements Serializable {
         return PersistenceClient.getInstance().getAllPosts();
     }
     
-    public Posts getPostById(){
-        return PersistenceClient.getInstance().getPostById();
+    public Posts getPostById(Integer postId){
+        return PersistenceClient.getInstance().getPostById(postId);
+    }
+    
+    public List<Posts> getPostsByUserId(Integer userId) {
+        return PersistenceClient.getInstance().getPostsByUserId(userId);
     }
     
     
@@ -36,8 +41,26 @@ public class PostBean implements Serializable {
     }
     
     
-    public void setSelectedPost(Posts selectedPost){
+    public String setSelectedPost(Posts selectedPost){
         this.selectedPost = selectedPost;
+        return "/PostPage/PostPage.xhtml?faces-redirect=true";
+    }
+    
+    public String getCurrentPostText(){
+        return currentPostText;
+    }
+    
+    public void setCurrentPostText(String currentPostText) {
+        this.currentPostText = currentPostText;
+    }
+    
+    
+    public String getErrorMessage(){
+        return errorMessage;
+    }
+    
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
     
 }

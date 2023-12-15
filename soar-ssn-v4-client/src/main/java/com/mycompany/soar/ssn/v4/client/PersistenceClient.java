@@ -56,6 +56,12 @@ public class PersistenceClient {
         return u;
     }
     
+    
+     public Users getUsersById(Integer userId) {
+        Users u = parseUser(client.target(USERS_URL + "/find/" + userId).request().get(String.class));
+        return u;
+    }
+    
     private List<Users> parseUserList(String result) {
         Gson gson = new Gson();
         return gson.fromJson(result, new TypeToken<List<Users>>() {
@@ -99,8 +105,12 @@ public class PersistenceClient {
     }
     
     
-    public Posts getPostById(){
-        Posts p = parsePost(client.target(POSTS_URL + "/find/1").request().get(String.class));
+    public Posts getPostById(Integer postId){
+        Posts p = parsePost(client.target(POSTS_URL + "/find/" + postId).request().get(String.class));
         return p;
+    }
+    
+    public List<Posts> getPostsByUserId(Integer userId) {
+        return parsePostsList(client.target(POSTS_URL + "/findByUserId/"+ userId).request().get(String.class));
     }
 }

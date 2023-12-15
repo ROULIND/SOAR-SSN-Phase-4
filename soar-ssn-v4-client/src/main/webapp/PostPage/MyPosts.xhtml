@@ -58,11 +58,11 @@
             <!-- Main Content Column for Displaying Posts -->
             <div class="column main-content">
                 <!-- Loop through each post by the user -->
-                <ui:repeat value="#{postBean.getPostsByUser(loginBean.getCurrentUser())}" var="post">
+                <ui:repeat value="#{postBean.getPostsByUserId(loginBean.getCurrentUser().getUserId())}" var="post">
 
                     <h:form>
                         <h:commandLink class="box mx-3" style="cursor: pointer;"
-                                       action="#{postBean.setSelectedPost(post.getPostId())}">
+                                       action="#{postBean.setSelectedPost(post)}">
                             <div class="columns">
                                         <div class="column is-2">
                                             <figure class="image is-128x128">
@@ -83,7 +83,7 @@
                                     <div class="column is-half small-padding">
                                         <h:outputText styleClass="is-size-5" value="#{post.getUsersCollection().size()}" />
                                         <span>
-                                            <i class="fas fa-heart" style="#{postBean.postIsLikedByUser(loginBean.getCurrentUser(), post) ? 'color:red;' : 'color:#4a4a4a;' }"></i>
+                                            <i class="fas fa-heart" style=""></i>
                                         </span>
                                     </div>
                                     <div class="column is-half small-padding">

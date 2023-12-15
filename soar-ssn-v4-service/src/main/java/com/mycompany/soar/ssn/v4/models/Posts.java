@@ -36,7 +36,8 @@ import java.util.Date;
     @NamedQuery(name = "Posts.findAll", query = "SELECT p FROM Posts p"),
     @NamedQuery(name = "Posts.findByPostId", query = "SELECT p FROM Posts p WHERE p.postId = :postId"),
     @NamedQuery(name = "Posts.findByText", query = "SELECT p FROM Posts p WHERE p.text = :text"),
-    @NamedQuery(name = "Posts.findByDatePublished", query = "SELECT p FROM Posts p WHERE p.datePublished = :datePublished")})
+    @NamedQuery(name = "Posts.findByDatePublished", query = "SELECT p FROM Posts p WHERE p.datePublished = :datePublished"),
+    @NamedQuery(name = "Posts.findByUserId", query = "SELECT p FROM Posts p WHERE p.users.userId = :userId")})
 public class Posts implements Serializable {
 
     private static final long serialVersionUID = 1L;

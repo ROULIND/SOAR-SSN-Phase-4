@@ -61,7 +61,7 @@
                 <div class="columns">
                     <div class="column is-2">
                         <figure class="image is-128x128">
-                            <img src="#{request.contextPath}/images/#{userBean.getUserPictureProfile(postBean.getSelectedPost().getUsers())}" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
+                            <img src="#{request.contextPath}/images/#{postBean.getSelectedPost().getUsers().getPictureProfile()}" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
                         </figure>
                     </div>
                     <div class="column">
@@ -87,10 +87,10 @@
                                 <h:outputText styleClass="is-size-5" value="#{postBean.getSelectedPost().getUsersCollection().size()}" />
 
                                 <h:commandLink
-                                        action="#{postBean.toggleLike(loginBean.getCurrentUser(), postBean.getSelectedPost())}"
+                                        action="#"
                                         >
                                     <span>
-                                        <i class="fas fa-heart" style="#{postBean.postIsLikedByUser(loginBean.getCurrentUser(), postBean.getSelectedPost()) ? 'color:red;' : 'color:#4a4a4a;' }"></i>
+                                        <i class="fas fa-heart" style=""></i>
                                     </span>
                                 </h:commandLink>
                             </h:form>
@@ -127,7 +127,7 @@
             <!-- Show Comments -->
             <ui:repeat value="#{postBean.getSelectedPost().getCommentsCollection()}" var="comment">
                 <div class="box m-3">
-                    <h:outputText styleClass="is-size-6" value="#{comment.getUsers().getUsername()}" />
+                    <h:outputText styleClass="is-size-6" value="#{userBean.getUsersById(comment.getUserId()).getUsername()}" />
                     <br/>
                     <h:outputText styleClass="is-size-5" value="#{comment.getText()}" />
                 </div>

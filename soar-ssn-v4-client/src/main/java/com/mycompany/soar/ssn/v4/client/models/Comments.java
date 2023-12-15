@@ -61,6 +61,10 @@ public class Comments {
     public void setPostId(Integer postId) {
         this.postId = postId;
     }
+    
+    public Integer getUserId(){
+        return this.userId;
+    }    
 
     public void setUserId(Integer userId) {
         this.userId = userId;

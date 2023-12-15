@@ -50,6 +50,11 @@ public class Comments implements Serializable {
     private Date datePublished;
     
     @Basic(optional = false)
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Integer userId;
+    
+    
+    @Basic(optional = false)
     @Column(name = "post_id", insertable = false, updatable = false)
     private Integer postId;
     
@@ -126,6 +131,14 @@ public class Comments implements Serializable {
 
     public void setUsers(Users users) {
         this.users = users;
+    }
+    
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override

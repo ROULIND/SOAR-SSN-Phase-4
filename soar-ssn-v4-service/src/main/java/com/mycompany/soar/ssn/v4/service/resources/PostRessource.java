@@ -50,4 +50,15 @@ public class PostRessource {
     public Posts find(@PathParam("id") Integer id) {
         return em.find(Posts.class, id);
     }
+    
+    @GET
+    @Path("/findByUserId/{userId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Posts> findByUserId(@PathParam("userId") Integer userId) {
+        Query query = em.createNamedQuery("Posts.findByUserId", Posts.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+    
+   
 }
