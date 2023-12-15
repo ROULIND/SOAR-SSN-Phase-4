@@ -87,10 +87,10 @@
                                 <h:outputText styleClass="is-size-5" value="#{postBean.getSelectedPost().getUsersCollection().size()}" />
 
                                 <h:commandLink
-                                        action="#"
+                                        action="#{postBean.toggleLikePost(postBean.getSelectedPost().getPostId(), loginBean.getCurrentUser().getUserId())}"
                                         >
-                                    <span>
-                                        <i class="fas fa-heart" style=""></i>
+                                    <span onclick="forceReload()">
+                                        <i class="fas fa-heart" style="#{postBean.isPostLikedByUser(postBean.getSelectedPost().getPostId(), loginBean.getCurrentUser().getUserId()) ? 'color:red;' : 'color:#4a4a4a;' }"></i>
                                     </span>
                                 </h:commandLink>
                             </h:form>

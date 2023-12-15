@@ -113,4 +113,18 @@ public class PersistenceClient {
     public List<Posts> getPostsByUserId(Integer userId) {
         return parsePostsList(client.target(POSTS_URL + "/findByUserId/"+ userId).request().get(String.class));
     }
+
+    public void toggleLikePost(Integer postId, Integer userId) {
+        WebTarget target = client.target(POSTS_URL + "/like/" + postId + "/" + userId);
+        target.request().post(null); // No entity is required for this POST request
+
+    }
+
+    public boolean isPostLikedByUser(Integer postId, Integer userId) {
+        WebTarget target = client.target(POSTS_URL + "/isLiked/" + postId + "/" + userId);
+        return target.request().get(Boolean.class);
+    }
+
+
+
 }

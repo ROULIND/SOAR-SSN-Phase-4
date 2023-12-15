@@ -9,3 +9,7 @@ function toggleCommentBox() {
         commentBox.style.display = "none";
     }
 }
+
+function forceReload() {
+    window.location.reload();
+}
