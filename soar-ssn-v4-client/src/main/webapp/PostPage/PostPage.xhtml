@@ -118,7 +118,7 @@
                 <h:form styleClass="block m-3">
                     <h:inputTextarea class="textarea" value="#{commentBean.currentCommentText}"></h:inputTextarea>
                     <h:commandLink class="button is-primary mt-1"
-                                   action="#{commentBean.makeComment(loginBean.currentUser, postBean.getSelectedPost())}"
+                                   action="#{commentBean.makeComment(loginBean.currentUser.getUserId(), postBean.getSelectedPost().getPostId())}"
 
                     >Post Comment</h:commandLink>
                 </h:form>

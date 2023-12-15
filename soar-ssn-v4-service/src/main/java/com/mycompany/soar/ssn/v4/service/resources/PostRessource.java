@@ -72,6 +72,8 @@ public class PostRessource {
         } else {
             post.getUsersCollection().add(user);
         }
+
+        em.merge(post);
     }
 
     @GET

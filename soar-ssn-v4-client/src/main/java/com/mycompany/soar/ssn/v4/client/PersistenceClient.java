@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
 import com.mycompany.soar.ssn.v4.client.exceptions.DoesNotExistException;
+import com.mycompany.soar.ssn.v4.client.models.Comments;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 
 import com.mycompany.soar.ssn.v4.client.models.Users;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class PersistenceClient {
 
     private static final String USERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/user";
     private static final String POSTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/post";
+    private static final String COMMENTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/comment";
+
 
     private static Client client;
     private static PersistenceClient instance;
@@ -124,6 +128,19 @@ public class PersistenceClient {
         WebTarget target = client.target(POSTS_URL + "/isLiked/" + postId + "/" + userId);
         return target.request().get(Boolean.class);
     }
+
+    public void createComment(Comments comment) {
+        WebTarget target = client.target(COMMENTS_URL + "/create");
+        Entity theEntity = Entity.entity(comment, MediaType.APPLICATION_JSON);
+        Response response = target.request().post(theEntity);
+        if(response.getStatus() != Response.Status.OK.getStatusCode() && response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) {
+            throw new RuntimeException("Failed to create comment: " + response);
+        }
+    }
+
+
+
+
 
 
 
