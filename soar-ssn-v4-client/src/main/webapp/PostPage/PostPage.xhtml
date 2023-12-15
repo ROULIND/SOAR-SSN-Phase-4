@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <!-- Page Title and CSS Links -->
+        <title>SSN Social Network</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+        <h:outputStylesheet name="css/UserPage.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+    <!-- Page body with content layout -->   
+    <div class="columns">
+        <!-- User Profile and Navigation Column -->
+        <div class="column is-one-fifth fixed-column">
+                    <center>
+                        <div class="image is-128x128">
+                            <img class="is-rounded" src="#{request.contextPath}/images/#{loginBean.getCurrentUser().getPictureProfile()}" alt="User Picture" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
+                        </div>
+                        <h:outputText value="#{loginBean.getCurrentUser().getUsername()}" styleClass="is-size-5 m-2" />
+                        
+                        <!-- User Buttons -->
+                        <h:form>
+                            <br/>
+                            <p:button value="Home" icon="pi pi-home" styleClass="button" 
+                                      outcome="/UserPage/UserMainPage.xhtml?faces-redirect=true" />
+                            <p:button value="Friends" icon="pi pi-users" styleClass="button"
+                                      outcome="/ProfilePage/FollowingPage.xhtml?faces-redirect=true"/>
+                            <p:button value="My Posts" icon="pi pi-align-justify" styleClass="button"
+                                                outcome="/PostPage/MyPosts.xhtml?faces-redirect=true"/>
+                            <p:button value="Publish" icon="pi pi-pencil" styleClass="button"
+                                             outcome="/PostPage/CreatePostPage.xhtml?faces-redirect=true" />
+                        </h:form>
+                        <div class="menu-button-container">
+                        <h:form>
+                            <!-- Navigation Buttons -->
+                            <p:growl id="messages" showDetail="false"/>
+                            <p:commandButton id="dynaButton" value="Settings" type="button" icon="pi pi-cog" styleClass="button"/>
+                            <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+                                <p:submenu label="Your Profile">
+                                    <p:menuitem value="My profile" action="#{userBean.goToProfilePage(loginBean.currentUser)}" update="messages" icon="pi pi-user"/>
+                                    <p:menuitem value="My account" action="#{userBean.goToInfoPage(loginBean.currentUser)}" update="messages" icon="pi pi-user"/>
+                                </p:submenu>
+                                <!-- Settings and Logout Menu -->
+                                <p:submenu label="Logout">
+                                    <p:menuitem value="Log-out" icon="pi pi-sign-out" action="#{loginBean.userLogsout()}"/>
+                                </p:submenu>
+                            </p:menu>
+                        </h:form>
+                    </div>
+                    </center>
+                </div>
+        <!-- Main Content Column for Displaying Post Details and Comments -->
+        <div class="main-content column">
+            <!-- Post details section -->
+            <div class="box mx-3" style="cursor: pointer;">
+                
+                <div class="columns">
+                    <div class="column is-2">
+                        <figure class="image is-128x128">
+                            <img src="#{request.contextPath}/images/#{postBean.getSelectedPost().getUsers().getPictureProfile()}" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
+                        </figure>
+                    </div>
+                    <div class="column">
+                        <h:form>
+                            <h:commandLink styleClass="is-size-5"
+                                           action="#{userBean.goToProfilePage(postBean.getSelectedPost().getUsers())}"
+                                           value="#{postBean.getSelectedPost().getUsers().getUsername()}" />
+                        </h:form>
+                        <h:outputText styleClass="is-size-7" value="#{postBean.getSelectedPost().getDatePublished()}" />
+
+                        <br/>
+                        <h:outputText styleClass="is-size-4" value="#{postBean.getSelectedPost().getText()}" />
+                    </div>
+                </div>
+                
+                
+                <hr/>
+                <center>
+                    <div class="columns">
+                        <!-- Interactions section for likes and comments -->
+                        <div class="column is-half small-padding">
+                            <h:form prependId="false">
+                                <h:outputText styleClass="is-size-5" value="#{postBean.getSelectedPost().getUsersCollection().size()}" />
+
+                                <h:commandLink
+                                        action="#"
+                                        >
+                                    <span>
+                                        <i class="fas fa-heart" style=""></i>
+                                    </span>
+                                </h:commandLink>
+                            </h:form>
+                        </div>
+                        
+                        
+                        
+                        <div class="column is-half small-padding" onclick="toggleCommentBox()">
+                            <h:outputText styleClass="is-size-5" value="#{postBean.getSelectedPost().getCommentsCollection().size()}" />
+                            <span class="icon">
+                                <i class="fas fa-comment"></i>
+                            </span>
+                        </div>
+                        
+                        
+
+                    </div>
+                </center>
+            </div>
+
+
+            <!-- Make Comment  -->
+            
+            <div id="commentBox">
+                <h:form styleClass="block m-3">
+                    <h:inputTextarea class="textarea" value="#{commentBean.currentCommentText}"></h:inputTextarea>
+                    <h:commandLink class="button is-primary mt-1"
+                                   action="#{commentBean.makeComment(loginBean.currentUser, postBean.getSelectedPost())}"
+
+                    >Post Comment</h:commandLink>
+                </h:form>
+            </div>
+
+            <!-- Show Comments -->
+            <ui:repeat value="#{postBean.getSelectedPost().getCommentsCollection()}" var="comment">
+                <div class="box m-3">
+                    <h:outputText styleClass="is-size-6" value="#{userBean.getUsersById(comment.getUserId()).getUsername()}" />
+                    <br/>
+                    <h:outputText styleClass="is-size-5" value="#{comment.getText()}" />
+                </div>
+
+            </ui:repeat>
+        </div>
+        <div class="column is-one-fifth">
+            
+        </div>
+
+    </div>
+
+
+    <!-- Javacsript Comment Box toggle -->
+    <h:outputScript name="js/toggleCommentBox.js"/>
+    <!-- Javascript Love button trigger / detector -->
+    <script type="text/javascript">
+    </script>
+
+
+        </h:body>
+
+
+</html>

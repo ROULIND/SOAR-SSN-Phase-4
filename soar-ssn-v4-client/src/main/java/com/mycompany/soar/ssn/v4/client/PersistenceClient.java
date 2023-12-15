@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
 import com.mycompany.soar.ssn.v4.client.exceptions.DoesNotExistException;
+import com.mycompany.soar.ssn.v4.client.models.Posts;
 
 import com.mycompany.soar.ssn.v4.client.models.Users;
 import jakarta.ws.rs.client.Client;
@@ -24,6 +25,7 @@ import java.util.List;
 public class PersistenceClient {
 
     private static final String USERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/user";
+    private static final String POSTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/post";
 
     private static Client client;
     private static PersistenceClient instance;
@@ -54,16 +56,24 @@ public class PersistenceClient {
         return u;
     }
     
+    
+     public Users getUsersById(Integer userId) {
+        Users u = parseUser(client.target(USERS_URL + "/find/" + userId).request().get(String.class));
+        return u;
+    }
+    
     private List<Users> parseUserList(String result) {
         Gson gson = new Gson();
         return gson.fromJson(result, new TypeToken<List<Users>>() {
         }.getType());
     }
+    
 
     private Users parseUser(String result) {
         Gson gson = new Gson();
         return gson.fromJson(result, Users.class);
     }
+    
     
     
     public void createUser(Users user) {
@@ -76,4 +86,31 @@ public class PersistenceClient {
         return client.target(USERS_URL + "/emailExists/" + email).request().get().readEntity(Boolean.class);
     }
     
+   
+    
+    private Posts parsePost(String result) {
+        Gson gson1 = new Gson();
+        return gson1.fromJson(result, Posts.class);
+    }
+    
+    
+    private List<Posts> parsePostsList(String result) {
+        Gson gson = new Gson();
+        return gson.fromJson(result, new TypeToken<List<Posts>>() {
+        }.getType());
+    }
+    
+    public List<Posts> getAllPosts() {
+        return parsePostsList(client.target(POSTS_URL + "/findAll").request().get(String.class));
+    }
+    
+    
+    public Posts getPostById(Integer postId){
+        Posts p = parsePost(client.target(POSTS_URL + "/find/" + postId).request().get(String.class));
+        return p;
+    }
+    
+    public List<Posts> getPostsByUserId(Integer userId) {
+        return parsePostsList(client.target(POSTS_URL + "/findByUserId/"+ userId).request().get(String.class));
+    }
 }

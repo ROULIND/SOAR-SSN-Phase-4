@@ -6,7 +6,9 @@ package com.mycompany.soar.ssn.v4.models;
 
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -75,9 +77,19 @@ public class Users implements Serializable {
     @ManyToMany(mappedBy = "usersCollection")
     @JsonbTransient
     private Collection<Users> usersCollection1;
+    
+    // Changes in the model : Now we get a list of postId insted of Posts object in order to avoid infinite cycling in Json creation
+    @ElementCollection
+    @CollectionTable(name = "Posts", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "post_id")
+    private Collection<Integer> postIds;
+    
+    /*
     @ManyToMany(mappedBy = "usersCollection")
     @JsonbTransient
     private Collection<Posts> postsCollection;
+    */
+    
     @OneToMany(mappedBy = "users")
     @JsonbTransient
     private Collection<Comments> commentsCollection;
@@ -174,13 +186,24 @@ public class Users implements Serializable {
         this.usersCollection1 = usersCollection1;
     }
 
+    
+     public Collection<Integer> getPostIds() {
+        return postIds;
+    }
+
+    public void setPostIds(Collection<Integer> postIds) {
+        this.postIds = postIds;
+    }
+    
+    
+    /*
     public Collection<Posts> getPostsCollection() {
         return postsCollection;
     }
 
     public void setPostsCollection(Collection<Posts> postsCollection) {
         this.postsCollection = postsCollection;
-    }
+    }*/
 
     public Collection<Comments> getCommentsCollection() {
         return commentsCollection;

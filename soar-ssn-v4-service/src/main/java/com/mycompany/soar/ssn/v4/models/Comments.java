@@ -4,6 +4,7 @@
  */
 package com.mycompany.soar.ssn.v4.models;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,15 +48,29 @@ public class Comments implements Serializable {
     @Column(name = "date_published")
     @Temporal(TemporalType.TIMESTAMP)
     private Date datePublished;
+    
+    @Basic(optional = false)
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Integer userId;
+    
+    
+    @Basic(optional = false)
+    @Column(name = "post_id", insertable = false, updatable = false)
+    private Integer postId;
+    
     @JoinColumn(name = "post_id", referencedColumnName = "post_id")
     @ManyToOne
-    private Posts postId;
+    @JsonbTransient
+    private Posts post;
     @JoinColumns({
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
         @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
     @ManyToOne
+    @JsonbTransient
     private Users users;
+
+
 
     public Comments() {
     }
@@ -93,13 +108,22 @@ public class Comments implements Serializable {
         this.datePublished = datePublished;
     }
 
-    public Posts getPostId() {
+    public Posts getPost() {
+        return post;
+    }
+
+    public void setPost(Posts post) {
+        this.post = post;
+    }
+    
+    public Integer getPostId() {
         return postId;
     }
 
-    public void setPostId(Posts postId) {
-        this.postId = postId;
+    public void setPostId(Integer postIdOnly) {
+        this.postId = postIdOnly;
     }
+    
 
     public Users getUsers() {
         return users;
@@ -107,6 +131,14 @@ public class Comments implements Serializable {
 
     public void setUsers(Users users) {
         this.users = users;
+    }
+    
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override

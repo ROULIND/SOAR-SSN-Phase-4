@@ -89,6 +89,14 @@ public class UserBean implements Serializable {
         this.password = "";*/
     }
     
+    public Users getUsersByUsername(String username) {
+        return PersistenceClient.getInstance().getUsersByName(username);
+    }
+    
+    public Users getUsersById(Integer userId){
+        return PersistenceClient.getInstance().getUsersById(userId);
+    }
+    
     public String getEmail() {
         return email;
     }

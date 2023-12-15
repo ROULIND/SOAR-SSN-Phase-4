@@ -4,6 +4,7 @@
  */
 package com.mycompany.soar.ssn.v4.models;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +36,8 @@ import java.util.Date;
     @NamedQuery(name = "Posts.findAll", query = "SELECT p FROM Posts p"),
     @NamedQuery(name = "Posts.findByPostId", query = "SELECT p FROM Posts p WHERE p.postId = :postId"),
     @NamedQuery(name = "Posts.findByText", query = "SELECT p FROM Posts p WHERE p.text = :text"),
-    @NamedQuery(name = "Posts.findByDatePublished", query = "SELECT p FROM Posts p WHERE p.datePublished = :datePublished")})
+    @NamedQuery(name = "Posts.findByDatePublished", query = "SELECT p FROM Posts p WHERE p.datePublished = :datePublished"),
+    @NamedQuery(name = "Posts.findByUserId", query = "SELECT p FROM Posts p WHERE p.users.userId = :userId")})
 public class Posts implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,7 +59,7 @@ public class Posts implements Serializable {
         @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
     @ManyToMany
     private Collection<Users> usersCollection;
-    @OneToMany(mappedBy = "postId")
+    @OneToMany(mappedBy = "post")
     private Collection<Comments> commentsCollection;
     @JoinColumns({
         @JoinColumn(name = "user_id", referencedColumnName = "user_id"),

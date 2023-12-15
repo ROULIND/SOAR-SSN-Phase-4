@@ -35,7 +35,7 @@ public class LoginBean implements Serializable {
             Users u = PersistenceClient.getInstance().checkPassword(username, password.hashCode());
             if (u != null) {
                 currentUser = u;
-                return "/MainPage/CreateUserPage.xhtml?faces-redirect=true";
+                return "/UserPage/UserMainPage.xhtml?faces-redirect=true";
             }
         } catch (DoesNotExistException ex) {
             System.out.println(ex.getMessage());

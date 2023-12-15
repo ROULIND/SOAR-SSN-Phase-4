@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <!-- Page Head with Title and Stylesheet Links -->
+    <title>SSN Social Network</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <h:outputStylesheet name="css/UserPage.css" />
+    <!-- JavaScript for Confirming Account Deletion -->
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete your account? This action cannot be undone.');
+        }
+    </script>
+
+</h:head>
+<h:body>
+    <!-- Main Layout -->
+    <div class="columns">
+        <!-- Left Column for User Profile and Navigation -->
+        <div class="column is-one-fifth fixed-column">
+            <center>
+                <div class="image is-128x128">
+                    <img class="is-rounded" src="#{request.contextPath}/images/#{loginBean.getCurrentUser().getPictureProfile()}" alt="User Picture" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
+                </div>
+                <h:outputText value="#{loginBean.getCurrentUser().getUsername()}" styleClass="is-size-5 m-2" />
+
+                <!-- User Buttons -->
+                <h:form>
+                    <br/>
+                    <p:button value="Home" icon="pi pi-home" styleClass="button" 
+                              outcome="/UserPage/UserMainPage.xhtml?faces-redirect=true" />
+                    <p:button value="Friends" icon="pi pi-users" styleClass="button"
+                              outcome="/ProfilePage/FollowingPage.xhtml?faces-redirect=true"
+                    />
+                    <p:button value="My Posts" icon="pi pi-align-justify" styleClass="button"
+                                        outcome="/PostPage/MyPosts.xhtml?faces-redirect=true"/>
+                    <p:button value="Publish" icon="pi pi-pencil" styleClass="button"
+                                     outcome="/PostPage/CreatePostPage.xhtml?faces-redirect=true" />
+                </h:form>
+                <div class="menu-button-container">
+                    
+                <h:form>
+                    <p:growl id="messages" showDetail="false"/>
+                    <p:commandButton id="dynaButton" value="Settings" type="button" icon="pi pi-cog" styleClass="bbutton"/>
+                    <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+                        <p:submenu label="Your Profile">
+                            <p:menuitem value="My profile" action="#{userBean.goToProfilePage(loginBean.getCurrentUser())}" update="messages" icon="pi pi-user"/>
+                            <p:menuitem value="My account" action="#{userBean.goToInfoPage(loginBean.getCurrentUser())}" update="messages" icon="pi pi-user"/>
+                        </p:submenu>
+                        <p:submenu label="Logout">
+                            <p:menuitem value="Log-out" icon="pi pi-sign-out" action="#{loginBean.userLogsout()}"/>
+                        </p:submenu>
+                    </p:menu>
+                </h:form>
+            </div>
+            </center>
+        </div>
+        <!-- Middle Column for Account Information -->
+        <div class="main-content column">
+            <center>
+                <h:outputText styleClass="title has-text-centered" value="My Account's informations" />
+                <br/>
+                <!-- Title and Form for Editing Account Information -->    
+                <h:form>
+                    <div class="box user-creation-box">
+                            <br/>
+                            <h:outputText value="Username"/>
+                            <h:inputText id="username" value="#{userBean.username}" required="true" requiredMessage="Enter a valid username" styleClass="input" />
+                            <h:message for="username" styleClass="error-message" />
+
+                            <h:outputText value="First Name"/>
+                            <h:inputText id="firstname" value="#{userBean.firstName}" required="true" requiredMessage="Enter a valid First Name" styleClass="input" />
+                            <h:message for="firstname" styleClass="error-message" />
+
+                            <h:outputText value="Last Name"/>
+                            <h:inputText id="lastname" value="#{userBean.lastName}" required="true" requiredMessage="Enter a valid Last Name"  styleClass="input" />
+                            <h:message for="lastname" styleClass="error-message" />
+
+                            <h:outputText value="E-mail"/>
+                            <h:inputText id="email" value="#{userBean.email}" validatorMessage="This is not a valid email format." styleClass="input">
+                                <f:validateRegex pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
+                            </h:inputText>
+                            <h:message for="email" styleClass="error-message" />
+                            
+                       
+                            <center>
+                                <h:commandButton value="Save changes" action="#{userBean.modifyAUser(loginBean.getCurrentUser())}"
+                                             styleClass="button is-primary mt-3"/>
+                            </center>
+                            
+                            
+                            
+                            
+                            <center>
+                                <h:commandButton class="delete" value="Delete account" action="#{userBean.deleteAUser()}"
+                                                 styleClass="button is-danger mt-3" onclick="return confirmDelete();"/>
+                            </center>
+                            
+                           
+                    </div>
+                    
+                </h:form>
+       
+   
+            </center>
+
+            
+        </div>
+        
+
+    </div>
+
+</h:body>
+
+
+</html>

@@ -4,8 +4,6 @@
  */
 package com.mycompany.soar.ssn.v4.service.resources;
 
-
-
 import com.mycompany.soar.ssn.v4.models.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

@@ -20,7 +20,7 @@ public class Users {
     private String email;
     private String pictureProfile;
     private Integer password;
-    private Collection<Posts> postsCollection;
+    private Collection<Integer> postIds;
     private Collection<Comments> commentsCollection;
 
     // Constructeur par défaut
@@ -30,7 +30,7 @@ public class Users {
     // Constructeur avec tous les attributs
     public Users(Integer userId, String firstName, String lastName, 
                  String username, String email, String pictureProfile, 
-                 Integer password, List<Posts> postsCollection, 
+                 Integer password, Collection<Integer> postIds, 
                  List<Comments> commentsCollection) {
         this.userId = userId;
         this.firstName = firstName;
@@ -39,7 +39,7 @@ public class Users {
         this.email = email;
         this.pictureProfile = pictureProfile;
         this.password = password;
-        this.postsCollection = postsCollection;
+        this.postIds = postIds;
         this.commentsCollection = commentsCollection;
     }
 
@@ -100,12 +100,12 @@ public class Users {
         this.password = password;
     }
 
-    public Collection<Posts> getPostsCollection() {
-        return postsCollection;
+    public Collection<Integer> getPostsCollection() {
+        return postIds;
     }
 
-    public void setPostsCollection(Collection<Posts> postsCollection) {
-        this.postsCollection = postsCollection;
+    public void setPostsCollection(Collection<Integer> postIds) {
+        this.postIds = postIds;
     }
 
     public Collection<Comments> getCommentsCollection() {
