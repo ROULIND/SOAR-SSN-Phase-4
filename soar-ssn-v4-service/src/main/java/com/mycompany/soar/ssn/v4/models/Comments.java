@@ -32,7 +32,8 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "Comments.findAll", query = "SELECT c FROM Comments c"),
     @NamedQuery(name = "Comments.findByCommentId", query = "SELECT c FROM Comments c WHERE c.commentId = :commentId"),
-    @NamedQuery(name = "Comments.findByDatePublished", query = "SELECT c FROM Comments c WHERE c.datePublished = :datePublished")})
+    @NamedQuery(name = "Comments.findByDatePublished", query = "SELECT c FROM Comments c WHERE c.datePublished = :datePublished"),
+    @NamedQuery(name = "Comments.findByUserId", query = "SELECT c FROM Comments c WHERE c.userId = :userId")})
 public class Comments implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -11,6 +11,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -34,6 +35,13 @@ public class PostRessource {
     @Transactional
     public void create(Posts entity) {
         em.persist(entity);
+    }
+    
+    @DELETE
+    @Path("/remove/{id}")
+    @Transactional
+    public void delete(@PathParam("id") Integer id) {
+        em.remove(em.merge(em.find(Posts.class, id)));
     }
     
     @GET

@@ -7,7 +7,7 @@ package com.mycompany.soar.ssn.v4.client.beans;
 import com.mycompany.soar.ssn.v4.client.PersistenceClient;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
+
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -77,5 +77,7 @@ public class PostBean implements Serializable {
         return PersistenceClient.getInstance().isPostLikedByUser(postId, userId);
 
     }
+    
+    
     
 }
