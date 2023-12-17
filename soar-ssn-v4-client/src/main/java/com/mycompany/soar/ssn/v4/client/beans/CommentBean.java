@@ -51,7 +51,7 @@ public class CommentBean implements Serializable {
      */
 
     @Transactional
-    public void makeComment(Integer userId, Integer postId) throws IllegalArgumentException {
+    public String makeComment(Integer userId, Integer postId) throws IllegalArgumentException {
         Users user = PersistenceClient.getInstance().getUsersById(userId);
 
         // Verify if the user exists
@@ -92,7 +92,11 @@ public class CommentBean implements Serializable {
 
 
             this.currentCommentText = ""; // reset the comment handler
+
         }
+        
+        return "/UserPage/UserMainPage.xhtml?faces-redirect=true";
+
 
     }
 
