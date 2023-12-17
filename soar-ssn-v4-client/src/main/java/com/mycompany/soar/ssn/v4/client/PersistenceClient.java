@@ -214,6 +214,17 @@ public class PersistenceClient {
         }
         return 0;
     }
+
+
+    public void createPost(Posts post) {
+        WebTarget target = client.target(POSTS_URL + "/create");
+        Entity<Posts> theEntity = Entity.entity(post, MediaType.APPLICATION_JSON);
+        Response response = target.request().post(theEntity);
+        if(response.getStatus() != Response.Status.OK.getStatusCode() && response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) {
+            throw new RuntimeException("Failed to create post: " + response);
+        }
+    }
+
 }
     
    
