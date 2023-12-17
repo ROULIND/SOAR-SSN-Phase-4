@@ -131,7 +131,7 @@
 
     </div>
     <script>
-    var followersCountPlaceholder = #{userBean.selectedUser.followers.size()};
+    var followersCountPlaceholder = #{userBean.findByFollowedId(userBean.getSelectedUser().getUserId()).size()};
     </script>
     <h:outputScript name="js/certified.js"/>
 
