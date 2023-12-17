@@ -55,35 +55,43 @@
         
         <!-- Middle Column for Following List -->
         <div class="main-content column">
-            <!-- Title for Following Section -->
-            <p class="has-text-centered title">Following</p>
-            <ui:repeat value="#{loginBean.getCurrentUser().getUsersCollection1()}" var="following">
+            <p class="has-text-centered title">Followers</p>
+            <ui:repeat value="#{userBean.findByFollowedId(loginBean.getCurrentUser().getUserId())}" var="following">
                 <h:form>
-                    <h:commandLink action="#{userBean.goToProfilePage(following)}">
+                    <h:commandLink action="#{userBean.goToProfilePage(userBean.getUsersById(following.getFollowerId()))}">
                         <div class="box m-3">
                             <span sstyle="cursor: pointer; color: black;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'">
-                                <h:outputText value="#{following.getUsername()}" />
+                                <h:outputText value="#{userBean.getUsersById(following.getFollowerId()).getUsername()}" />
                             </span>
-                            <span>(Followers: #{following.getUsersCollection().size()})</span>
+                            <span>(Followers: #{userBean.findByFollowedId(following.getFollowerId()).size()})</span>
                         </div>
                     </h:commandLink>
                 </h:form>
             </ui:repeat>
         </div>
+        
         <!-- Right Column for Followers List -->
-        <div class="column" style="padding-top: 65px;">
-            <p class="has-text-centered title">Followers</p>
-            <ui:repeat value="#{loginBean.getCurrentUser().getUsersCollection()}" var="follower">
-                    <h:link outcome="#{userBean.goToProfilePage(follower)}">
+        <div class="main-content column">
+
+            <p class="has-text-centered title">Following</p>
+            <ui:repeat value="#{userBean.findByFollowerId(loginBean.getCurrentUser().getUserId())}" var="followers">
+                <h:form>
+                    <h:commandLink action="#{userBean.goToProfilePage(userBean.getUsersById(followers.getFollowedId()))}">
                         <div class="box m-3">
                             <span sstyle="cursor: pointer; color: black;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'">
-                                <h:outputText value="#{follower.getUsername()}" />
+                                <h:outputText value="#{userBean.getUsersById(followers.getFollowedId()).getUsername()}" />
                             </span>
-                            <span>(Followers: #{follower.getUsersCollection().size()})</span>
+                            <span>(Followers: #{userBean.findByFollowedId(followers.getFollowedId()).size()})</span>
+                            
                         </div>
-                    </h:link>
+                        
+                    </h:commandLink>
+                </h:form>
             </ui:repeat>
         </div>
+                <div class="column is-one-fifth mx-3" >              
+        </div>
+        
     </div>
 
 </h:body>

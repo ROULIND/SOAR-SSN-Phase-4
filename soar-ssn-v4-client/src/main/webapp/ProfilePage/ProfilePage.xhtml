@@ -60,19 +60,21 @@
             <center>
             <h:outputText styleClass="title has-text-centered" value="#{userBean.getSelectedUser().getUsername()}'s user page" />
             <br/>
-            <h:outputText styleClass="is-size-3 has-text-centered" value="#{userBean.getSelectedUser().getUsersCollection().size()} follower(s)" />
+            <h:outputText styleClass="is-size-3 has-text-centered" value="#{userBean.findByFollowedId(userBean.getSelectedUser().getUserId()).size()} follower(s)" />
             <br/>
             <h:form>
                 <!-- Follow/Unfollow Button -->
-                <h:commandLink class="button #{userBean.checkIfFollowing(loginBean.getCurrentUser(), userBean.getSelectedUser()) ? 'is-danger' : ''}" action="#{userBean.toggleFollow(loginBean.getCurrentUser(), userBean.getSelectedUser())}"
+                
+                <h:commandLink class="button" action="#{userBean.toggleFollowUser(loginBean.getCurrentUser().getUserId(),userBean.getSelectedUser().getUserId())}"
                                rendered="#{!((userBean.getSelectedUser().getUsername()) eq (loginBean.getCurrentUser().getUsername()))}">
                     <span class="icon">
                         <i class="fas fa-bell"></i>
                     </span>
                     <span>
-                        <h:outputText value="#{userBean.checkIfFollowing(loginBean.getCurrentUser(), userBean.getSelectedUser()) ? 'Unfollow' : 'Follow'}"  />
+                        <h:outputText value="Follow"  />
                     </span>
                 </h:commandLink>
+                
             </h:form>
        
    
@@ -83,14 +85,14 @@
                 
                 
                 
-                <ui:repeat value="#{postBean.getPostsByUser(userBean.getSelectedUser())}" var="post">
+                <ui:repeat value="#{postBean.getPostsByUserId(userBean.getSelectedUser().getUserId())}" var="post">
                     <h:form>
                         <h:commandLink class="box mx-3" style="cursor: pointer;"
-                                       action="#{postBean.setSelectedPost(post.getPostId())}">
+                                       action="#">
                             <div class="columns">
                                 <div class="column is-2" style="margin-right:10px;">
                                     <figure class="image is-128x128">
-                                        <img src="#{request.contextPath}/images/#{userBean.getUserPictureProfile(post.getUsers())}" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
+                                        <img src="#{request.contextPath}/images/#{post.getUsers().getPictureProfile()}" style="object-fit: cover; max-height: 128px;max-width: 128px;"/>
                                     </figure>
                                 </div>
                                 <div class="column">
@@ -107,7 +109,7 @@
                                     <div class="column is-half small-padding">
                                         <h:outputText styleClass="is-size-5" value="#{post.getUsersCollection().size()}" />
                                         <span>
-                                            <i class="fas fa-heart" style="#{postBean.postIsLikedByUser(loginBean.getCurrentUser(), post) ? 'color:red;' : 'color:#4a4a4a;' }"></i>
+                                            <i class="fas fa-heart" style=""></i>
                                         </span>
                                     </div>
                                     <div class="column is-half small-padding">

@@ -6,12 +6,14 @@ package com.mycompany.soar.ssn.v4.client.beans;
 
 import com.mycompany.soar.ssn.v4.client.PersistenceClient;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
+import com.mycompany.soar.ssn.v4.client.models.Followers;
 import com.mycompany.soar.ssn.v4.client.models.Users;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -38,7 +40,7 @@ public class UserBean implements Serializable {
      * @return String The navigation outcome.
      */
     public String goToProfilePage(Users user) {
-        this.selectedUser = user;
+        setSelectedUser(user);
         return "/ProfilePage/ProfilePage.xhtml?faces-redirect=true";
     }
 /**
@@ -87,6 +89,24 @@ public class UserBean implements Serializable {
         this.firstName = "";
         this.lastName = "";
         this.password = "";*/
+    }
+    
+    
+    public void modifyAUser(Users userToUpdate) {
+        userToUpdate.setUsername(username);
+        userToUpdate.setFirstName(firstName);
+        userToUpdate.setLastName(lastName);
+        userToUpdate.setEmail(email);
+        PersistenceClient.getInstance().updateUser(userToUpdate);
+    }
+    
+    
+    public List<Followers> findByFollowerId(Integer followerId){
+        return PersistenceClient.getInstance().findByFollowerId(followerId);
+    }
+    
+    public List<Followers> findByFollowedId(Integer followedId){
+        return PersistenceClient.getInstance().findByFollowedId(followedId);
     }
     
     public Users getUsersByUsername(String username) {
@@ -154,7 +174,12 @@ public class UserBean implements Serializable {
     public void setPictureProfile(String pictureProfile) {
         this.pictureProfile = pictureProfile;
     }
-
-
+    
+    
+    public void toggleFollowUser(Integer userId, Integer userToFollowId) {
+        PersistenceClient.getInstance().toggleFollowUser(userId, userToFollowId);
+    }
+    
+    
     
 }

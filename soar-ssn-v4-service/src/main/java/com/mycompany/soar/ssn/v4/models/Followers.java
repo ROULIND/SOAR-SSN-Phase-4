@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "Followers.findAll", query = "SELECT f FROM Followers f"),
     @NamedQuery(name = "Followers.findByFollowerId", query = "SELECT f FROM Followers f WHERE f.followerId = :followerId"),
-    @NamedQuery(name = "Followers.findByFollowedId", query = "SELECT f FROM Followers f WHERE f.followedId = :followedId")
+    @NamedQuery(name = "Followers.findByFollowedId", query = "SELECT f FROM Followers f WHERE f.followedId = :followedId"),
 })
 public class Followers implements Serializable {
 
@@ -24,15 +24,15 @@ public class Followers implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "follower_id")
     private Integer id;
 
     @Basic(optional = false)
-    @Column(name = "follower_id")
+    @Column(name = "user_id")
     private Integer followerId;
 
     @Basic(optional = false)
-    @Column(name = "followed_id")
+    @Column(name = "followed_user_id")
     private Integer followedId;
 
     public Followers() {
