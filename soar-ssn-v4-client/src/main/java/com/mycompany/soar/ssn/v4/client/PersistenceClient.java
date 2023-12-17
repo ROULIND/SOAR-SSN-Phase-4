@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
 import com.mycompany.soar.ssn.v4.client.exceptions.DoesNotExistException;
+import com.mycompany.soar.ssn.v4.client.models.Followers;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 
 import com.mycompany.soar.ssn.v4.client.models.Users;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
@@ -26,9 +28,11 @@ public class PersistenceClient {
 
     private static final String USERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/user";
     private static final String POSTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/post";
+    private static final String FOLLOWERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/follower";
 
     private static Client client;
     private static PersistenceClient instance;
+    public List<Followers> get;
     
     
     private PersistenceClient() {
@@ -40,6 +44,10 @@ public class PersistenceClient {
             instance = new PersistenceClient();
         }
         return instance;
+    }
+    
+    public void updateUser(Users user) {
+        client.target(USERS_URL + "/edit/" + user.getUserId()).request().put(Entity.entity(user, "application/json"));
     }
     
     public Users checkPassword(String username, int password) throws DoesNotExistException {
@@ -113,4 +121,71 @@ public class PersistenceClient {
     public List<Posts> getPostsByUserId(Integer userId) {
         return parsePostsList(client.target(POSTS_URL + "/findByUserId/"+ userId).request().get(String.class));
     }
+    
+    
+    
+    
+    /* ------------- FOLLOWERS REQUESTS ---------------- */
+    
+    private List<Followers> parseFollowersList(String result) {
+        Gson gson = new Gson();
+        return gson.fromJson(result, new TypeToken<List<Followers>>() {
+        }.getType());
+    }
+    
+    
+    public List<Followers> findByFollowerId(Integer followerId) {
+        return parseFollowersList(client.target(FOLLOWERS_URL + "/findByFollowerId/"+ followerId).request().get(String.class));
+    }
+    
+    public List<Followers> findByFollowedId(Integer followerId) {
+        return parseFollowersList(client.target(FOLLOWERS_URL + "/findByFollowedId/"+ followerId).request().get(String.class));
+    }
+    
+    
+    public void toggleFollowUser(Integer userId, Integer userToFollowId) {
+        WebTarget target;
+        if (isFollowedBy(userToFollowId, userId)) {
+            // User is already followed, so remove the follower
+            int followId = findFollowersEntryId(userToFollowId, userId);
+            target = client.target(FOLLOWERS_URL + "/remove/" + followId);
+            target.request().delete();
+        } else {
+            // User is not followed, so add as a new follower
+            Followers follower = new Followers();
+            follower.setFollowerId(userId);
+            follower.setFollowedId(userToFollowId);
+
+            target = client.target(FOLLOWERS_URL + "/create");
+            Entity<Followers> theEntity = Entity.entity(follower, MediaType.APPLICATION_JSON);
+            target.request().post(theEntity);
+        }
+    }
+    
+    public boolean isFollowedBy(Integer userFollowedId, Integer userFollowingId){
+        List<Followers> followers = findByFollowedId(userFollowedId);
+        boolean checkFollowedBy = false;
+        for (Followers follower : followers) {
+            if (follower.getFollowerId().equals(userFollowingId)) {
+                checkFollowedBy = true;
+                break; // Break the loop once a match is found
+            }
+        }
+        return checkFollowedBy;
+    }
+    
+    public int findFollowersEntryId(Integer userFollowedId, Integer userFollowingId){
+        List<Followers> followers = findByFollowedId(userFollowedId);
+        boolean checkFollowedBy = false;
+        for (Followers follower : followers) {
+            if (follower.getFollowerId().equals(userFollowingId)) {
+                return follower.getId();
+            }
+        }
+        return 0;
+    }
+    
+   
+    
+    
 }
