@@ -94,11 +94,14 @@
                                              styleClass="button is-primary mt-3"/>
                             </center>
                             
+                            <br/>
+                            <h:outputText value="#{userBean.findAllCommentsByUserId(loginBean.getCurrentUser().getUserId())}"/>
+                            
                             
                             
                             
                             <center>
-                                <h:commandButton class="delete" value="Delete account" action="#{userBean.deleteAUser()}"
+                                <h:commandButton class="delete" value="Delete account" action="#{userBean.deleteAUser(loginBean.getCurrentUser())}"
                                                  styleClass="button is-danger mt-3" onclick="return confirmDelete();"/>
                             </center>
                             

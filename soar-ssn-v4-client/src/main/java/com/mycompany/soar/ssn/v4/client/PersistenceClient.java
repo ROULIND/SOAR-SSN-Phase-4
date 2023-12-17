@@ -10,6 +10,7 @@ import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
 import com.mycompany.soar.ssn.v4.client.exceptions.DoesNotExistException;
 import com.mycompany.soar.ssn.v4.client.models.Comments;
 import com.mycompany.soar.ssn.v4.client.models.Followers;
+import com.mycompany.soar.ssn.v4.client.models.Likes;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 
 import com.mycompany.soar.ssn.v4.client.models.Users;
@@ -30,7 +31,7 @@ public class PersistenceClient {
     private static final String USERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/user";
     private static final String POSTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/post";
     private static final String COMMENTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/comment";
-
+    private static final String LIKES_URL = "http://localhost:8080/soar-ssn-v4-service/resources/like";
     private static final String FOLLOWERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/follower";
 
     private static Client client;
@@ -49,22 +50,31 @@ public class PersistenceClient {
         return instance;
     }
     
-    public void updateUser(Users user) {
-        client.target(USERS_URL + "/edit/" + user.getUserId()).request().put(Entity.entity(user, "application/json"));
-    }
+    
+    
+    
+    /* --------------- LOGIN USERS REQUESTS -------------*/
+    
     
     public Users checkPassword(String username, int password) throws DoesNotExistException {
-    Users u = getUsersByName(username);
-    if (u != null && u.getUsername().equals(username) && u.getPassword() == password) {
-        return u;
+        Users u = getUsersByName(username);
+        if (u != null && u.getUsername().equals(username) && u.getPassword() == password) {
+            return u;
+        }
+        throw new DoesNotExistException("User " + username + " does not exist or incorrect password.");
     }
-    throw new DoesNotExistException("User " + username + " does not exist or incorrect password.");
-}
     
     
     public Users getUsersByName(String username) {
         Users u = parseUser(client.target(USERS_URL + "/findByName/" + username).request().get(String.class));
         return u;
+    }
+    
+    /* ------------ USERS REQUESTS ------------ */
+    
+    
+    public void updateUser(Users user) {
+        client.target(USERS_URL + "/edit/" + user.getUserId()).request().put(Entity.entity(user, "application/json"));
     }
     
     
@@ -93,11 +103,19 @@ public class PersistenceClient {
         Response response = target.request().post(theEntity);
     }
     
+    public void deleteUser(Integer userId) {
+        WebTarget target;
+        target = client.target(USERS_URL + "/remove/" + userId);
+        target.request().delete();
+    }
+    
     public boolean emailExists(String email) throws AlreadyExistsException {
         return client.target(USERS_URL + "/emailExists/" + email).request().get().readEntity(Boolean.class);
     }
     
    
+    
+    /* ------------ POSTS REQUESTS --------------- */
     
     private Posts parsePost(String result) {
         Gson gson1 = new Gson();
@@ -135,7 +153,33 @@ public class PersistenceClient {
         WebTarget target = client.target(POSTS_URL + "/isLiked/" + postId + "/" + userId);
         return target.request().get(Boolean.class);
     }
+    
+    
+    
+    public void deletePostsByUserId(Integer userId) {
+        for (Posts post : getPostsByUserId(userId)){
+            WebTarget target;
+            target = client.target(POSTS_URL + "/remove/" + post.getPostId());
+            target.request().delete();
+        }
+    }
 
+   
+    
+    /* --------------- COMMENTS REQUESTS -------------- */
+    
+     private Comments parseComment(String result) {
+        Gson gson1 = new Gson();
+        return gson1.fromJson(result, Comments.class);
+    }
+    
+    private List<Comments> parseCommentsList(String result) {
+        Gson gson = new Gson();
+        return gson.fromJson(result, new TypeToken<List<Comments>>() {
+        }.getType());
+    }
+    
+    
     public void createComment(Comments comment) {
         WebTarget target = client.target(COMMENTS_URL + "/create");
         Entity theEntity = Entity.entity(comment, MediaType.APPLICATION_JSON);
@@ -144,17 +188,53 @@ public class PersistenceClient {
             throw new RuntimeException("Failed to create comment: " + response);
         }
     }
-
-
-
-
-
-
-
+    
+    public List<Comments> findAllCommentsByUserId(Integer userId){
+        return parseCommentsList(client.target(COMMENTS_URL + "/findByUserId/"+ userId).request().get(String.class));
+    }
     
     
     
+    public void deleteCommentsByUserId(Integer userId) {
+        for (Comments comment : findAllCommentsByUserId(userId)){
+            WebTarget target;
+            target = client.target(COMMENTS_URL + "/remove/" + comment.getCommentId());
+            target.request().delete();
+        }
+    }
     
+    
+    /* -------------- LIKES REQUESTS ------------- */
+    
+    private Likes parseLike(String result) {
+        Gson gson1 = new Gson();
+        return gson1.fromJson(result, Likes.class);
+    }
+    
+    
+    private List<Likes> parseLikesList(String result) {
+        Gson gson = new Gson();
+        return gson.fromJson(result, new TypeToken<List<Likes>>() {
+        }.getType());
+    }
+    
+    
+    public List<Likes> findAllLikesByUserId(Integer userId){
+        return parseLikesList(client.target(LIKES_URL + "/findByUserId/"+ userId).request().get(String.class));
+    }
+    
+    
+    
+    public void deleteLikesByUserId(Integer userId) {
+        for (Likes like : findAllLikesByUserId(userId)){
+            WebTarget target;
+            target = client.target(LIKES_URL + "/remove/" + like.getLikeId());
+            target.request().delete();
+        }
+    }
+
+
+
     /* ------------- FOLLOWERS REQUESTS ---------------- */
     
     private List<Followers> parseFollowersList(String result) {
@@ -162,6 +242,22 @@ public class PersistenceClient {
         return gson.fromJson(result, new TypeToken<List<Followers>>() {
         }.getType());
     }
+    
+    public void deleteFollowersByUserId(Integer userId) {
+        for (Followers follower : findByFollowedId(userId)){
+            WebTarget target;
+            target = client.target(FOLLOWERS_URL + "/remove/" + follower.getId());
+            target.request().delete();
+        }
+        
+        for (Followers follower : findByFollowerId(userId)){
+            WebTarget target;
+            target = client.target(FOLLOWERS_URL + "/remove/" + follower.getId());
+            target.request().delete();
+        }
+    }
+    
+   
     
     
     public List<Followers> findByFollowerId(Integer followerId) {
@@ -214,7 +310,8 @@ public class PersistenceClient {
         }
         return 0;
     }
-
+    
+    
 
     public void createPost(Posts post) {
         WebTarget target = client.target(POSTS_URL + "/create");
@@ -224,6 +321,7 @@ public class PersistenceClient {
             throw new RuntimeException("Failed to create post: " + response);
         }
     }
+
 
 }
     

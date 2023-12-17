@@ -8,7 +8,7 @@ import com.mycompany.soar.ssn.v4.client.PersistenceClient;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 import com.mycompany.soar.ssn.v4.client.models.Users;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
+
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
@@ -156,5 +156,7 @@ public class PostBean implements Serializable {
 
         this.translatedText = translatedText;
     }
+    
+    
     
 }

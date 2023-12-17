@@ -6,7 +6,9 @@ package com.mycompany.soar.ssn.v4.client.beans;
 
 import com.mycompany.soar.ssn.v4.client.PersistenceClient;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
+import com.mycompany.soar.ssn.v4.client.models.Comments;
 import com.mycompany.soar.ssn.v4.client.models.Followers;
+import com.mycompany.soar.ssn.v4.client.models.Likes;
 import com.mycompany.soar.ssn.v4.client.models.Users;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -99,6 +101,35 @@ public class UserBean implements Serializable {
         userToUpdate.setEmail(email);
         PersistenceClient.getInstance().updateUser(userToUpdate);
     }
+    
+    
+    public String deleteAUser(Users userToDelete) {
+   
+  
+        // Supprimer tous les "likes" de l'utilisateur (WORKING !!!)
+        PersistenceClient.getInstance().deleteLikesByUserId(userToDelete.getUserId());
+        
+        // Supprimer tous les commentaires de l'utilisateur (WORKING !!!)
+        PersistenceClient.getInstance().deleteCommentsByUserId(userToDelete.getUserId());
+
+        // Supprimer toutes les entrées de followers où l'utilisateur est soit le follower soit le followed
+        PersistenceClient.getInstance().deleteFollowersByUserId(userToDelete.getUserId());
+
+        // Supprimer tous les posts de l'utilisateur
+        PersistenceClient.getInstance().deletePostsByUserId(userToDelete.getUserId());
+        
+        PersistenceClient.getInstance().deleteUser(userToDelete.getUserId());
+        return "/MainPage/MainPage.xhtml?faces-redirect=true";
+    }
+    
+    public List<Likes> findAllLikesByUserId(Integer userId){
+        return PersistenceClient.getInstance().findAllLikesByUserId(userId);
+    }
+    
+    public List<Comments> findAllCommentsByUserId(Integer userId){
+        return PersistenceClient.getInstance().findAllCommentsByUserId(userId);
+    }
+    
     
     
     public List<Followers> findByFollowerId(Integer followerId){
