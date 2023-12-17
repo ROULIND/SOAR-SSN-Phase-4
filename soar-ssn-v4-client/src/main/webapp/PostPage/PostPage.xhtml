@@ -76,8 +76,17 @@
                         <h:outputText styleClass="is-size-4" value="#{postBean.getSelectedPost().getText()}" />
                     </div>
                 </div>
-                
-                
+
+                <!-- Translation -->
+                <h:form>
+                    <h:commandLink action="#{postBean.translatePost(postBean.getSelectedPost().getText())}">
+                        Translate
+                    </h:commandLink>
+                    <h:outputText value="#{postBean.getTranslatedText()}" />
+                </h:form>
+
+
+
                 <hr/>
                 <center>
                     <div class="columns">
@@ -110,6 +119,8 @@
                     </div>
                 </center>
             </div>
+
+
 
 
             <!-- Make Comment  -->
