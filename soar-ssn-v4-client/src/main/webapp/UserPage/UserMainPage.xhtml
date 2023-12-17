@@ -85,7 +85,7 @@
                                         <div class="column is-half small-padding">
                                             <h:outputText styleClass="is-size-5" value="#{post.getUsersCollection().size()}" />
                                             <span>
-                                                <i class="fas fa-heart" style="#"></i>
+                                                <i class="fas fa-heart" style="#{postBean.isPostLikedByUser(post.getPostId(), loginBean.getCurrentUser().getUserId()) ? 'color:red;' : 'color:#4a4a4a;' }"></i>
                                             </span>
                                         </div>
                                         <div class="column is-half small-padding">
