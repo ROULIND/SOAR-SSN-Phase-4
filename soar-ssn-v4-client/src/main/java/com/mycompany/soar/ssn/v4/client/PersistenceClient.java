@@ -258,8 +258,6 @@ public class PersistenceClient {
     }
     
    
-    
-    
     public List<Followers> findByFollowerId(Integer followerId) {
         return parseFollowersList(client.target(FOLLOWERS_URL + "/findByFollowerId/"+ followerId).request().get(String.class));
     }

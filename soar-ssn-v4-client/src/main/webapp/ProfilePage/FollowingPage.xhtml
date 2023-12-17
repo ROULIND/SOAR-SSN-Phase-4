@@ -53,7 +53,7 @@
             </center>
         </div>
         
-        <!-- Middle Column for Following List -->
+        <!-- Middle Column for Followers List -->
         <div class="main-content column">
             <p class="has-text-centered title">Followers</p>
             <ui:repeat value="#{userBean.findByFollowedId(loginBean.getCurrentUser().getUserId())}" var="following">
@@ -70,7 +70,7 @@
             </ui:repeat>
         </div>
         
-        <!-- Right Column for Followers List -->
+        <!-- Right Column for Following List -->
         <div class="main-content column">
 
             <p class="has-text-centered title">Following</p>
