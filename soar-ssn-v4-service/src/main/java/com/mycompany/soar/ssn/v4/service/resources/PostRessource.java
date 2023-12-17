@@ -59,6 +59,31 @@ public class PostRessource {
         query.setParameter("userId", userId);
         return query.getResultList();
     }
+
+    @POST
+    @Path("/like/{postId}/{userId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Transactional
+    public void toggleLike(@PathParam("postId") Integer postId, @PathParam("userId") Integer userId) {
+        Posts post = em.find(Posts.class, postId);
+        Users user = em.find(Users.class, userId);
+        if (post.getUsersCollection().contains(user)) {
+            post.getUsersCollection().remove(user);
+        } else {
+            post.getUsersCollection().add(user);
+        }
+
+        em.merge(post);
+    }
+
+    @GET
+    @Path("/isLiked/{postId}/{userId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public boolean isLiked(@PathParam("postId") Integer postId, @PathParam("userId") Integer userId) {
+        Posts post = em.find(Posts.class, postId);
+        Users user = em.find(Users.class, userId);
+        return post.getUsersCollection().contains(user);
+    }
     
    
 }

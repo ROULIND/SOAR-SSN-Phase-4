@@ -45,6 +45,12 @@ public class Comments {
         this.text = text;
     }
 
+    public void setUsersId(Integer userId){
+        this.userId = userId;
+    }
+
+
+
     public Date getDatePublished() {
         return datePublished;
     }

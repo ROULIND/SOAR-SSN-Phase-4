@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycompany.soar.ssn.v4.client.exceptions.AlreadyExistsException;
 import com.mycompany.soar.ssn.v4.client.exceptions.DoesNotExistException;
+import com.mycompany.soar.ssn.v4.client.models.Comments;
 import com.mycompany.soar.ssn.v4.client.models.Followers;
 import com.mycompany.soar.ssn.v4.client.models.Posts;
 
@@ -28,6 +29,8 @@ public class PersistenceClient {
 
     private static final String USERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/user";
     private static final String POSTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/post";
+    private static final String COMMENTS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/comment";
+
     private static final String FOLLOWERS_URL = "http://localhost:8080/soar-ssn-v4-service/resources/follower";
 
     private static Client client;
@@ -121,6 +124,33 @@ public class PersistenceClient {
     public List<Posts> getPostsByUserId(Integer userId) {
         return parsePostsList(client.target(POSTS_URL + "/findByUserId/"+ userId).request().get(String.class));
     }
+
+    public void toggleLikePost(Integer postId, Integer userId) {
+        WebTarget target = client.target(POSTS_URL + "/like/" + postId + "/" + userId);
+        target.request().post(null); // No entity is required for this POST request
+
+    }
+
+    public boolean isPostLikedByUser(Integer postId, Integer userId) {
+        WebTarget target = client.target(POSTS_URL + "/isLiked/" + postId + "/" + userId);
+        return target.request().get(Boolean.class);
+    }
+
+    public void createComment(Comments comment) {
+        WebTarget target = client.target(COMMENTS_URL + "/create");
+        Entity theEntity = Entity.entity(comment, MediaType.APPLICATION_JSON);
+        Response response = target.request().post(theEntity);
+        if(response.getStatus() != Response.Status.OK.getStatusCode() && response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) {
+            throw new RuntimeException("Failed to create comment: " + response);
+        }
+    }
+
+
+
+
+
+
+
     
     
     
@@ -188,4 +218,3 @@ public class PersistenceClient {
    
     
     
-}
